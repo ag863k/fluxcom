@@ -1,0 +1,19 @@
+# Java build
+/target/
+*.class
+
+# Logs
+*.log
+
+# IDEs
+/.idea/
+/*.iml
+/.classpath
+/.project
+/.settings/
+
+# OS
+.DS_Store
+
+# Environment
+.env
