@@ -1,50 +1,42 @@
 package com.fluxcom.controller;
 
-import com.fluxcom.model.AuthRequest;
-import com.fluxcom.model.AuthResponse;
-import com.fluxcom.model.User;
-import com.fluxcom.repository.UserRepository;
-import com.fluxcom.security.JwtUtil;
+import com.fluxcom.dto.*;
+import com.fluxcom.service.UserService;
+import com.fluxcom.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
-    @Autowired private AuthenticationManager authenticationManager;
-    @Autowired private UserDetailsService userDetailsService;
-    @Autowired private UserRepository userRepository;
-    @Autowired private JwtUtil jwtUtil;
-    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private JwtService jwtService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody AuthRequest authRequest) {
-        if (userRepository.findByUsername(authRequest.getUsername()).isPresent()) {
-            return ResponseEntity.badRequest().body("Error: Username is already taken!");
+    public ResponseEntity<AuthResponse> signup(@RequestBody SignupRequest request) {
+        try {
+            var user = userService.createUser(request.getUsername(), request.getEmail(), request.getPassword());
+            String token = jwtService.generateToken(user.getUsername());
+            return ResponseEntity.ok(new AuthResponse(token, user.getUsername(), user.getEmail()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
-        User user = new User();
-        user.setUsername(authRequest.getUsername());
-        user.setPassword(passwordEncoder.encode(authRequest.getPassword()));
-        userRepository.save(user);
-        return ResponseEntity.ok("User registered successfully!");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authRequest) throws Exception {
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
+            var user = userService.authenticate(request.getUsername(), request.getPassword());
+            String token = jwtService.generateToken(user.getUsername());
+            return ResponseEntity.ok(new AuthResponse(token, user.getUsername(), user.getEmail()));
         } catch (Exception e) {
-            return ResponseEntity.status(401).body("Incorrect username or password");
+            return ResponseEntity.badRequest().build();
         }
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
-        final String jwt = jwtUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new AuthResponse(jwt));
     }
 }

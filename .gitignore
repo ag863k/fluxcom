@@ -1,19 +1,65 @@
-# dependencies
+# Dependencies
 node_modules/
-# production
-build/
-dist/
-# misc
-.DS_Store
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+**/node_modules/
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log*
-# IDEs
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+/frontend/dist/
+/backend/target/
+
+# IDE and OS files
 .vscode/
 .idea/
-*.swp
+*.iml
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Database
+/data/
+
+# Vercel/Netlify/Deployment
+.vercel/
+.netlify/
+
+# Environment variables and secrets (all env, secret, key, pem, and prod files)
+.env
+.env.*
+*.env
+*.secret
+*.key
+*.pem
+*.crt
+*.p12
+*.jks
+*.keystore
+*.pfx
+
+# Production and secret config files (anywhere in the project)
+*prod*.yml
+*prod*.yaml
+*prod*.properties
+*prod*.json
+*prod*.env
+*secret*.yml
+*secret*.yaml
+*secret*.properties
+*secret*.json
+*secret*.env
+
+**/application-prod.*
+**/application*secret*.*
+
+*credential*
+*password*
+*token*
+*password*
+*token*
