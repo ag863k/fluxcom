@@ -8,6 +8,5 @@ class FluxcomApplicationTests {
 
     @Test
     void contextLoads() {
-        // Basic context load test
     }
 }

@@ -6,9 +6,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * User entity that implements Spring Security UserDetails
+ */
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,9 +29,10 @@ public class User implements UserDetails {
     @Column
     private Boolean online = false;
 
-    // Constructors
+    // Default constructor
     public User() {}
 
+    // Constructor with parameters
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
@@ -35,37 +40,74 @@ public class User implements UserDetails {
         this.online = false;
     }
 
-    // Getters and Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Standard getters and setters
+    public Long getId() { 
+        return id; 
+    }
     
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public void setId(Long id) { 
+        this.id = id; 
+    }
+    
+    // UserDetails interface method
+    @Override
+    public String getUsername() { 
+        return username; 
+    }
+    
+    public void setUsername(String username) { 
+        this.username = username; 
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getEmail() { 
+        return email; 
+    }
+    
+    public void setEmail(String email) { 
+        this.email = email; 
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    // UserDetails interface method
+    @Override
+    public String getPassword() { 
+        return password; 
+    }
+    
+    public void setPassword(String password) { 
+        this.password = password; 
+    }
 
-    public Boolean getOnline() { return online; }
-    public void setOnline(Boolean online) { this.online = online; }
+    public Boolean getOnline() { 
+        return online; 
+    }
+    
+    public void setOnline(Boolean online) { 
+        this.online = online; 
+    }
 
-    // UserDetails implementation
+    // UserDetails interface implementations
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList();
     }
 
     @Override
-    public boolean isAccountNonExpired() { return true; }
+    public boolean isAccountNonExpired() { 
+        return true; 
+    }
 
     @Override
-    public boolean isAccountNonLocked() { return true; }
+    public boolean isAccountNonLocked() { 
+        return true; 
+    }
 
     @Override
-    public boolean isCredentialsNonExpired() { return true; }
+    public boolean isCredentialsNonExpired() { 
+        return true; 
+    }
 
     @Override
-    public boolean isEnabled() { return true; }
+    public boolean isEnabled() { 
+        return true; 
+    }
 }
